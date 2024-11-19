@@ -17,7 +17,7 @@ REGION = "us-central1"  # @param {type: "string"}
 DATA_STORE_PROJECT_ID = PROJECT_ID  # @param {type:"string"}
 DATA_STORE_REGION = "global"  # @param {type:"string"}
 # Replace this with your data store ID from Vertex AI Search
-DATA_STORE_ID = "janison-com_1730988913673"  # @param {type:"string"}
+DATA_STORE_ID = "janison-academy_1731937803796"  # @param {type:"string"}
 
 
 # Set up Google Gemini-Pro AI model
@@ -33,20 +33,21 @@ tool = Tool.from_retrieval(
     )
 )
 
+system_instruction=[
+    "You are a friendly and helpful assistant. Your role is to explain about Janison academy based on the given pdf file within one paragraph.",
+    "When a user asked a question, descrtibe in 3 sentences and suggest 5 related brief questions whose answers are explicitly stated in the provided brochure in bulleted list format, unless the question asked by a user is suggested by you.",
+    # "When answering, start the first sentence kindly",
+    # "Your answer is within 5 precise sentences, unless you are suggesting questions.", # This causes un-related questions
+    # "For any non-english queries, respond in the same language as the prompt unless otherwise specified by the user.",
+    "If a question is not related to Janison academy, the response should be, 'That is beyond my knowledge.'",
+    # "All questions should be answered comprehensively with details, unless the user requests a concise response specifically."
+    ]
+
 # System instructions https://cloud.google.com/vertex-ai/generative-ai/docs/reference/python/latest#system-instructions
 model = GenerativeModel(model_name='gemini-pro',
                         tools=[tool],
-                        system_instruction=[
-                            "You are a friendly and helpful assistant. Your role is to explain about Janison based on their website within one paragraph.",
-                            "When a user asked a question, always suggest 5 related brief questions in bulleted list format, unless the asking question from a user is suggested by you.",
-                            "When answering, start the first sentence kindly",
-                            "Refer to the information from websites only and do not access local files on my device."
-                            # "Your answer is within 5 precise sentences, unless you are suggesting questions.", # This causes un-related questions
-                            "For any non-english queries, respond in the same language as the prompt unless otherwise specified by the user.",
-                            "If a question is not related to Janison, the response should be, 'That is beyond my knowledge.'",
-                            "All questions should be answered comprehensively with details, unless the user requests a concise response specifically."
-                        ])
-
+                        system_instruction=system_instruction
+                        )
 
 # Function to translate roles between Gemini-Pro and Streamlit terminology
 def translate_role_for_streamlit(user_role):
@@ -62,8 +63,8 @@ if "chat_session" not in st.session_state:
 
 
 # Display the chatbot's title on the page
-st.title("🤖 Janison chatbot suggesting questions")
-st.caption("Start by asking a comprehensive question like 'How does Janison make money?'")
+st.title("🤖 Janison academy chatbot suggesting questions")
+st.caption("Start by asking a comprehensive question like 'What is Janison academy?'")
 
 from vertexai.preview.generative_models import grounding as preview_grounding
 
